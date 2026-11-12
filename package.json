@@ -1,19 +1,34 @@
 {
   "name": "canvas-barcode",
-  "version": "1.0.1",
-  "description": "draw EAN13 and code128 barcode on the canvas --javascript",
+  "version": "1.1.0",
+  "description": "在 Canvas 上绘制 EAN-13 与 Code128（A/B/C）条码",
   "main": "js/barcode.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "js/barcode.js",
+    "js/EAN13_b.js",
+    "js/code128.js",
+    "types",
+    "README.md"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test test/barcode.test.js",
+    "prepublishOnly": "npm test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/heartOfblack/barcode.git"
+    "url": "git+https://github.com/nothing-sy/barcode.git"
   },
-  "author": "",
+  "keywords": [
+    "barcode",
+    "ean13",
+    "code128",
+    "canvas"
+  ],
+  "author": "heartofblack",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/heartOfblack/barcode/issues"
+    "url": "https://github.com/nothing-sy/barcode/issues"
   },
-  "homepage": "https://github.com/heartOfblack/barcode#readme"
+  "homepage": "https://github.com/nothing-sy/barcode#readme"
 }
