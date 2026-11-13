@@ -1,18 +1,29 @@
 {
   "name": "canvas-barcode",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "在 Canvas 上绘制 EAN-13 与 Code128（A/B/C）条码",
-  "main": "js/barcode.js",
-  "types": "types/index.d.ts",
+  "type": "module",
+  "main": "./dist/canvas-barcode.cjs",
+  "module": "./dist/canvas-barcode.mjs",
+  "browser": "./dist/canvas-barcode.min.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/canvas-barcode.mjs",
+      "require": "./dist/canvas-barcode.cjs",
+      "default": "./dist/canvas-barcode.mjs"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
-    "js/barcode.js",
-    "js/EAN13_b.js",
-    "js/code128.js",
+    "dist",
     "types",
     "README.md"
   ],
   "scripts": {
-    "test": "node --test test/barcode.test.js",
+    "build": "node scripts/build.js",
+    "test": "npm run build && node --test test/barcode.test.js",
     "prepublishOnly": "npm test"
   },
   "repository": {
@@ -23,12 +34,16 @@
     "barcode",
     "ean13",
     "code128",
-    "canvas"
+    "canvas",
+    "esm"
   ],
   "author": "heartofblack",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/nothing-sy/barcode/issues"
   },
-  "homepage": "https://github.com/nothing-sy/barcode#readme"
+  "homepage": "https://github.com/nothing-sy/barcode#readme",
+  "devDependencies": {
+    "esbuild": "^0.25.12"
+  }
 }

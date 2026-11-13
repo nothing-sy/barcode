@@ -1,8 +1,14 @@
-'use strict'
+import { describe, it } from 'node:test'
+import assert from 'node:assert/strict'
+import { createRequire } from 'node:module'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
+import { EAN13, code128 } from '../src/index.js'
+import defaultExport from '../src/index.js'
 
-const { describe, it, beforeEach } = require('node:test')
-const assert = require('node:assert/strict')
-const { EAN13, code128 } = require('../js/barcode.js')
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const require = createRequire(import.meta.url)
 
 function createMockCanvas() {
 	const calls = []
@@ -20,6 +26,38 @@ function createMockCanvas() {
 	}
 }
 
+describe('ESM named exports', () => {
+	it('exposes EAN13 and code128', () => {
+		assert.equal(typeof EAN13, 'function')
+		assert.equal(typeof code128, 'function')
+		assert.equal(defaultExport.EAN13, EAN13)
+		assert.equal(defaultExport.code128, code128)
+	})
+})
+
+describe('CJS require', () => {
+	it('supports require("..") style named props', () => {
+		const cjs = require('../dist/canvas-barcode.cjs')
+		assert.equal(typeof cjs.EAN13, 'function')
+		assert.equal(typeof cjs.code128, 'function')
+		assert.equal(new cjs.EAN13('590123412345').checkCode('590123412345'), 7)
+	})
+})
+
+describe('IIFE globals', () => {
+	it('attaches EAN13 and code128 on globalThis', () => {
+		const code = readFileSync(join(__dirname, '../dist/canvas-barcode.min.js'), 'utf8')
+		const sandbox = { globalThis: {} }
+		sandbox.window = sandbox.globalThis
+		const fn = new Function('globalThis', 'window', code + '\nreturn globalThis;')
+		const g = fn(sandbox.globalThis, sandbox.globalThis)
+		assert.equal(typeof g.EAN13, 'function')
+		assert.equal(typeof g.code128, 'function')
+		assert.equal(typeof g.CanvasBarcode.EAN13, 'function')
+		assert.equal(new g.EAN13('590123412345').checkCode('590123412345'), 7)
+	})
+})
+
 describe('EAN13', () => {
 	it('format accepts 12/13 digits only', () => {
 		assert.equal(new EAN13('123456789012').format('123456789012'), '123456789012')
@@ -29,9 +67,7 @@ describe('EAN13', () => {
 	})
 
 	it('checkCode matches known EAN-13 examples', () => {
-		// 590123412345 + check 7 => 5901234123457
 		assert.equal(new EAN13('590123412345').checkCode('590123412345'), 7)
-		// 400638133393 + check 1
 		assert.equal(new EAN13('400638133393').checkCode('400638133393'), 1)
 		assert.equal(new EAN13('535350244626').checkCode('535350244626'), 1)
 		assert.equal(new EAN13('978014103614').checkCode('978014103614'), 4)
@@ -53,7 +89,7 @@ describe('EAN13', () => {
 
 	it('draw paints bars on canvas', () => {
 		const canvas = createMockCanvas()
-		global.document = {
+		globalThis.document = {
 			getElementById() {
 				return canvas
 			},
@@ -109,7 +145,7 @@ describe('code128', () => {
 
 	it('draw paints bars and resets between calls', () => {
 		const canvas = createMockCanvas()
-		global.document = {
+		globalThis.document = {
 			getElementById() {
 				return canvas
 			},

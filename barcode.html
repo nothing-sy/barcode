@@ -1,29 +1,17 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
-		<meta charset="UTF-8">
-		<title></title>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>canvas-barcode demo</title>
 	</head>
-
 	<body>
-		<!--<canvas id="canvas" width="500" height="300"></canvas>-->
-		<!--<script src="bundle.js" type="text/javascript" charset="utf-8"></script>-->
-		<!--<script src="js/EAN13_b.js" type="text/javascript" charset="utf-8"></script>-->
-		<!--<script type="text/javascript">
-		
-		</script>-->
-		<script src='js/EAN13_b.js'></script>
-<script src='js/code128.js'></script>
-
-<canvas id="EAN" width="500" height="300"></canvas>
-<canvas id="code" width="500" height="300"></canvas>
-
-<script>
-new EAN13('123456789215').draw('EAN',2,100);
-new code128('SH125896').draw('code',2,100);
-console.log(a);
-</script>
+		<script src="dist/canvas-barcode.min.js"></script>
+		<canvas id="EAN" width="500" height="120"></canvas>
+		<canvas id="code" width="500" height="120"></canvas>
+		<script>
+			new EAN13('590123412345').draw('EAN', 2, 100)
+			new code128('SH125896').draw('code', 2, 100)
+		</script>
 	</body>
-
 </html>

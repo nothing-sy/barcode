@@ -10,21 +10,54 @@
 npm install canvas-barcode
 ```
 
-## 用法（Node / 打包器）
+## 用法
+
+### ESM（推荐）
 
 ```js
-const barcode = require('canvas-barcode')
+import { EAN13, code128 } from 'canvas-barcode'
 
-// EAN-13：传入 12 位数字，校验位自动计算；也可传 13 位
-new barcode.EAN13('590123412345').draw('canvas', 2, 100)
-
-// Code128：自动选择编码集
-// - 含小写字母 → B
-// - 纯偶数位数字 → C
-// - 其它 → A
-new barcode.code128('SH125896').draw('canvas', 2, 100)
-new barcode.code128('123456').draw('canvas', 2, 40) // Code C
+new EAN13('590123412345').draw('canvas', 2, 100)
+new code128('SH125896').draw('canvas', 2, 100)
+new code128('123456').draw('canvas', 2, 40) // Code C
 ```
+
+也支持默认导入：
+
+```js
+import barcode from 'canvas-barcode'
+new barcode.EAN13('590123412345').draw('canvas', 2, 100)
+```
+
+### CommonJS
+
+```js
+const { EAN13, code128 } = require('canvas-barcode')
+```
+
+### 浏览器标签引入
+
+使用构建产物 `dist/canvas-barcode.min.js`（挂载 `window.EAN13` / `window.code128`，同时提供 `window.CanvasBarcode`）：
+
+```html
+<script src="dist/canvas-barcode.min.js"></script>
+<canvas id="EAN" width="500" height="120"></canvas>
+<canvas id="code" width="500" height="120"></canvas>
+<script>
+  new EAN13('590123412345').draw('EAN', 2, 100)
+  new code128('SH125896').draw('code', 2, 100)
+</script>
+```
+
+CDN 示例（版本号按需替换）：
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/canvas-barcode@1.2.0/dist/canvas-barcode.min.js"></script>
+```
+
+> 旧的 `js/EAN13_b.js` / `js/code128.js` 已弃用，请改用上述单文件。
+
+## API
 
 `draw(target, moduleWidth, height)`：
 
@@ -34,32 +67,17 @@ new barcode.code128('123456').draw('canvas', 2, 40) // Code C
 | `moduleWidth` | 单个条模块宽度（像素） |
 | `height` | 条码高度（像素） |
 
-仅需二进制 / 条空模式、不绘制时：
+仅编码、不绘制：
 
 ```js
-const ean = new barcode.EAN13('590123412345')
+const ean = new EAN13('590123412345')
 ean.encode()        // '0'/'1' 二进制串
 ean.checkDigit      // 7
 
-const c128 = new barcode.code128('abc')
+const c128 = new code128('abc')
 c128.encode()       // 'b'/'s' 黑白模式串
 c128.setName        // 'B'
 ```
-
-## 浏览器直接引入
-
-```html
-<script src="js/EAN13_b.js"></script>
-<script src="js/code128.js"></script>
-<canvas id="EAN" width="500" height="120"></canvas>
-<canvas id="code" width="500" height="120"></canvas>
-<script>
-  new EAN13('590123412345').draw('EAN', 2, 100)
-  new code128('SH125896').draw('code', 2, 100)
-</script>
-```
-
-## API
 
 ### `EAN13`
 
@@ -77,10 +95,14 @@ c128.setName        // 'B'
 | `encode()` | 返回 `b`/`s` 模式串，并设置 `setName` 为 `A`/`B`/`C` |
 | `draw(id, width, height)` | 绘制到 canvas（可重复调用，内部会重置状态） |
 
+Code128 自动选择编码集：含小写 → B；纯偶数位数字 → C；其它 → A。
+
 ## 开发
 
 ```bash
-npm test
+npm install
+npm test          # 先 build 再跑测试
+npm run build     # 输出 dist/canvas-barcode.{mjs,cjs,min.js}
 ```
 
 ## License
