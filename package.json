@@ -1,6 +1,6 @@
 {
   "name": "canvas-barcode",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "在 Canvas 上绘制 EAN-13 与 Code128（A/B/C）条码",
   "type": "module",
   "main": "./dist/canvas-barcode.cjs",

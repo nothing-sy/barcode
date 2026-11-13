@@ -52,7 +52,7 @@ const { EAN13, code128 } = require('canvas-barcode')
 CDN 示例（版本号按需替换）：
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/canvas-barcode@1.2.0/dist/canvas-barcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-barcode@1.2.1/dist/canvas-barcode.min.js"></script>
 ```
 
 > 旧的 `js/EAN13_b.js` / `js/code128.js` 已弃用，请改用上述单文件。
